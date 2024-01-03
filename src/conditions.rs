@@ -101,3 +101,212 @@ impl fmt::Display for Conditions {
         write!(f, "carry: {}, aux: {}, sign: {}, zero: {}, parity: {}", self.carry, self.aux, self.sign, self.zero, self.parity)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_conditions() {
+        let conditions = Conditions::new();
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_set_carry() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Carry, true);
+        assert_eq!(conditions.carry, true);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_set_parity() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Parity, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, true);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_set_aux() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Auxillary, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, true);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_set_zero() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Zero, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, true);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_set_sign() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Sign, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, true);
+    }
+
+    #[test]
+    fn test_reset_carry() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Carry, true);
+        assert_eq!(conditions.carry, true);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+        conditions.set(ConditionName::Carry, false);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_reset_parity() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Parity, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, true);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+        conditions.set(ConditionName::Parity, false);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_reset_aux() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Auxillary, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, true);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+        conditions.set(ConditionName::Auxillary, false);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_reset_zero() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Zero, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, true);
+        assert_eq!(conditions.sign, false);
+        conditions.set(ConditionName::Zero, false);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_reset_sign() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Sign, true);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, true);
+        conditions.set(ConditionName::Sign, false);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, false);
+        assert_eq!(conditions.sign, false);
+    }
+
+    #[test]
+    fn test_get_carry() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Carry, true);
+        assert_eq!(conditions.get(ConditionName::Carry), true);
+    }
+
+    #[test]
+    fn test_get_parity() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Parity, true);
+        assert_eq!(conditions.get(ConditionName::Parity), true);
+    }
+
+    #[test]
+    fn test_get_aux() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Auxillary, true);
+        assert_eq!(conditions.get(ConditionName::Auxillary), true);
+    }
+
+    #[test]
+    fn test_get_zero() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Zero, true);
+        assert_eq!(conditions.get(ConditionName::Zero), true);
+    }
+
+    #[test]
+    fn test_get_sign() {
+        let mut conditions = Conditions::new();
+        conditions.set(ConditionName::Sign, true);
+        assert_eq!(conditions.get(ConditionName::Sign), true);
+    }
+
+    #[test]
+    fn test_as_bits() {
+        let mut conditions = Conditions::new();
+        assert_eq!(conditions.as_bits(), 0b00000000);
+        conditions.set(ConditionName::Sign, true);
+        assert_eq!(conditions.as_bits(), 0b10000000);
+    }
+
+    #[test]
+    fn test_restore_from_bits() {
+        let mut conditions = Conditions::new();
+        conditions.restore_from_bits(0b11000000);
+        assert_eq!(conditions.carry, false);
+        assert_eq!(conditions.parity, false);
+        assert_eq!(conditions.aux, false);
+        assert_eq!(conditions.zero, true);
+        assert_eq!(conditions.sign, true);
+    }
+}

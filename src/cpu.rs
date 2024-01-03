@@ -12,6 +12,13 @@ enum Register {
     L,
 }
 
+enum RegisterPair {
+    BC,
+    DE,
+    HL,
+    PSW,
+}
+
 pub struct Cpu {
     a: u8,
     b: u8,
@@ -2039,6 +2046,11 @@ impl Cpu {
         }
     }
 
+    /* Length: 1, Cycles: 4, Flags: None*/
+    fn nop(&self) -> usize {
+        return 3;
+    }
+
     fn enable_interrupts(&mut self) {
         self.interrupt_enabled = true;
     }
@@ -2066,4 +2078,80 @@ fn check_half_carry_sub(v1: u8, v2: u8) -> bool {
     let v2_masked = v2 & 0x0F;
     let result = (v1_masked - v2_masked) & 0x10;
     return result == 0x10;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_cpu() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let cpu = Cpu::new(memory);
+        assert_eq!(cpu.a, 0);
+        assert_eq!(cpu.b, 0);
+        assert_eq!(cpu.c, 0);
+        assert_eq!(cpu.d, 0);
+        assert_eq!(cpu.e, 0);
+        assert_eq!(cpu.h, 0);
+        assert_eq!(cpu.l, 0);
+        assert_eq!(cpu.conditions.as_bits(), 0b00000000);
+        assert_eq!(cpu.pc, 0);
+        assert_eq!(cpu.sp,  0);
+        assert_eq!(cpu.interrupt_enabled, true);
+        assert_eq!(cpu.memory.read(0), 0);
+        assert_eq!(cpu.wait_cycles, 0);
+        assert_eq!(cpu.interrupt_opcode, None);
+    }
+
+    #[test]
+    fn test_nop() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let mut cpu = Cpu::new(memory);
+        let cycles = cpu.nop();
+        assert_eq!(cycles, 3);
+    }
+
+    #[test]
+    fn test_receive_interrupt_enabled() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let mut cpu = Cpu::new(memory);
+        cpu.receive_interrupt(1);
+        let interrupt_opcode = match cpu.interrupt_opcode {
+            Some(x) => x,
+            None => 0b00000000
+        };
+        assert_eq!(interrupt_opcode, 0b00000001);
+    }
+
+    #[test]
+    fn test_receive_interrupt_disabled() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let mut cpu = Cpu::new(memory);
+        cpu.interrupt_enabled = false;
+        cpu.receive_interrupt(1);
+        let interrupt_opcode = match cpu.interrupt_opcode {
+            Some(x) => x,
+            None => 0b00000000
+        };
+        assert_eq!(interrupt_opcode, 0);
+    }
+
+    #[test]
+    fn test_disable_interrupt() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let mut cpu = Cpu::new(memory);
+        cpu.disable_interrupts();
+        assert_eq!(cpu.interrupt_enabled, false);
+    }
+
+    #[test]
+    fn test_enable_interrupt() {
+        let memory = Box::new(crate::memory::basic_memory::BasicMemory::new());
+        let mut cpu = Cpu::new(memory);
+        cpu.disable_interrupts();
+        assert_eq!(cpu.interrupt_enabled, false);
+        cpu.enable_interrupts();
+        assert_eq!(cpu.interrupt_enabled, true);
+    }
 }
