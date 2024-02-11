@@ -48,7 +48,7 @@ impl Conditions {
     }
 
     pub fn as_bits(&self) -> u8 {
-        let mut bits: u8 = 0b00000000;
+        let mut bits: u8 = 0b00000010;
         if self.carry {
             bits = bits | 0b00000001;
         }
@@ -294,9 +294,9 @@ mod tests {
     #[test]
     fn test_as_bits() {
         let mut conditions = Conditions::new();
-        assert_eq!(conditions.as_bits(), 0b00000000);
+        assert_eq!(conditions.as_bits(), 0b000000010);
         conditions.set(ConditionName::Sign, true);
-        assert_eq!(conditions.as_bits(), 0b10000000);
+        assert_eq!(conditions.as_bits(), 0b10000010);
     }
 
     #[test]

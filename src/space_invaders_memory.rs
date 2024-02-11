@@ -1,5 +1,3 @@
-//use std::fmt;
-
 use crate::memory::Memory;
 
 pub struct SpaceInvadersMemory {
@@ -44,14 +42,6 @@ impl Memory for SpaceInvadersMemory {
         }
     }
 }
-
-/*
-impl fmt::Display for SpaceInvadersMemory {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.memory[0])
-    }
-}
-*/
 
 #[cfg(test)]
 mod tests {
