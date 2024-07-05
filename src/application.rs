@@ -4,8 +4,8 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
-use crate::space_invaders_memory;
-use crate::cpu;
+//use crate::space_invaders_memory;
+//use crate::cpu;
 
 const SCREEN_WIDTH: usize = 256;
 const SCREEN_HEIGHT: usize = 224;
@@ -46,8 +46,8 @@ impl App {
                     rom[(i * 2048) + pos] = *e;
                 }
             }
-            let memory = Box::new(space_invaders_memory::SpaceInvadersMemory::new(rom));
-            let mut c = cpu::Cpu::new(memory);
+            let memory = Box::new(intel8080::memory::Memory::new(rom));
+            let mut c = intel8080::emulator::Cpu::new(memory);
             println!("8080 CPU started");
 
             let mut shift_register: u16 = 0;

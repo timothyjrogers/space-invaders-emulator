@@ -45,7 +45,7 @@ pub struct Cpu {
     sp: u16,
     conditions: conditions::Conditions,
     interrupt_enabled: bool,
-    memory: Box<dyn Memory>,
+    memory: Box<Memory>,
     wait_cycles: usize,
     interrupt_opcode: Option<u8>,
     devices: [u8; 256],
@@ -54,7 +54,7 @@ pub struct Cpu {
 }
 
 impl Cpu {
-    pub fn new(memory: Box<dyn Memory>) -> Self {
+    pub fn new(memory: Box<Memory>) -> Self {
         Cpu {
             a: 0,
             b: 0,

@@ -1,10 +1,8 @@
-use crate::memory::Memory;
-
-pub struct SpaceInvadersMemory {
+pub struct Memory {
     memory: [u8; 65_536],   
 }
 
-impl SpaceInvadersMemory {
+impl Memory {
     pub fn new(rom: [u8; 8_192]) -> Self {
         let mut memory = [0; 65_536];
         for addr in 0..8_192 {
@@ -14,10 +12,8 @@ impl SpaceInvadersMemory {
             memory,
         }
     }
-}
 
-impl Memory for SpaceInvadersMemory {
-    fn read(&self, addr: u16) -> u8 {
+    pub fn read(&self, addr: u16) -> u8 {
         match addr {
             0x0000..=0x3FFF => return self.memory[addr as usize],
             0x4000..=0x5FFF => return  self.memory[(addr - 0x2000) as usize],
@@ -29,7 +25,7 @@ impl Memory for SpaceInvadersMemory {
         }
     }
 
-    fn write(&mut self, addr: u16, data: u8) {
+    pub fn write(&mut self, addr: u16, data: u8) {
         match addr {
             0x0000..=0x1FFF => return,
             0x2000..=0x3FFF => self.memory[addr as usize] = data,
@@ -49,27 +45,27 @@ mod tests {
 
     #[test]
     fn test_read() {
-        let mut memory = SpaceInvadersMemory::new([0; 8_192]);
+        let mut memory = Memory::new([0; 8_192]);
         assert_eq!(memory.read(0x0000), 0x0);
     }
 
     #[test]
     fn test_write() {
-        let mut memory = SpaceInvadersMemory::new([0; 8_192]);
+        let mut memory = Memory::new([0; 8_192]);
         memory.write(0x2000, 0x1);
         assert_eq!(memory.read(0x2000), 0x1);
     }
 
     #[test]
     fn test_write_readonly() {
-        let mut memory = SpaceInvadersMemory::new([0; 8_192]);
+        let mut memory = Memory::new([0; 8_192]);
         memory.write(0x0, 0x1);
         assert_eq!(memory.read(0x0), 0x0);
     }
 
     #[test]
     fn test_mirror() {
-        let mut memory = SpaceInvadersMemory::new([0; 8_192]);
+        let mut memory = Memory::new([0; 8_192]);
         memory.write(0x2000, 0x1);
         assert_eq!(memory.read(0x6000), 0x1);
     }

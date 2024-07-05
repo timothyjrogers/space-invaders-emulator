@@ -1,10 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod memory;
-mod space_invaders_memory;
-mod cpu;
-mod conditions;
 mod application;
+
+use intel8080;
 
 fn main() -> eframe::Result<()> {
     env_logger::init();

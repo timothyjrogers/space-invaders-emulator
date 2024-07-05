@@ -1,0 +1,7 @@
+[package]
+name = "intel8080"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+lazy_static = "1.5.0"
