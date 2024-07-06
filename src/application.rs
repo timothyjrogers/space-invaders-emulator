@@ -3,9 +3,7 @@ use std::thread;
 use std::sync::Arc;
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
-
-//use crate::space_invaders_memory;
-//use crate::cpu;
+use crate::audio::AudioHandler;
 
 const SCREEN_WIDTH: usize = 256;
 const SCREEN_HEIGHT: usize = 224;
@@ -53,6 +51,9 @@ impl App {
             let mut shift_register: u16 = 0;
             let mut shift_register_offest: u8 = 0;
 
+            let mut audio = AudioHandler::new();
+            let mut last_device3: u8 = 0b00000000;
+            let mut last_device5: u8 = 0b00000000;
             let mut start = Instant::now();
             loop {
                 let mut tick = 0;
@@ -68,11 +69,42 @@ impl App {
                                 0x2 => {
                                     shift_register_offest = value & 0x07;
                                 },
-                                0x3 => {}, //OUT 3 Sound not implemented.
+                                0x3 => {
+                                    if value & 0b00000001 == 0b00000001 && last_device3 & 0b00000001 != 0b00000001{
+                                        audio.play_sound(0);
+                                    }
+                                    if value & 0b00000010 == 0b00000010 && last_device3 & 0b00000010 != 0b00000010 {
+                                        audio.play_sound(1);
+                                    }
+                                    if value & 0b00000100 == 0b00000100 && last_device3 & 0b00000100 != 0b00000100 {
+                                        audio.play_sound(2);
+                                    }
+                                    if value & 0b00001000 == 0b00001000 && last_device3 & 0b00001000 != 0b00001000 {
+                                        audio.play_sound(3);
+                                    }
+                                    last_device3 = value;
+                                },
                                 0x4 => {
                                     shift_register = ((value as u16) << 8) | (shift_register >> 8);
                                 },
-                                0x5 => {}, //OUT 5 Sound not implemented.
+                                0x5 => {
+                                    if value & 0b00000001 == 0b00000001 && last_device5 & 0b00000001 != 0b00000001 {
+                                        audio.play_sound(4);
+                                    }
+                                    if value & 0b00000010 == 0b00000010 && last_device5 & 0b00000010 != 0b00000010 {
+                                        audio.play_sound(5);
+                                    }
+                                    if value & 0b00000100 == 0b00000100 && last_device5 & 0b00000100 != 0b00000100 {
+                                        audio.play_sound(6);
+                                    }
+                                    if value & 0b00001000 == 0b00001000 && last_device5 & 0b00001000 != 0b00001000 {
+                                        audio.play_sound(7);
+                                    }
+                                    if value & 0b00010000 == 0b00010000 && last_device5 & 0b00010000 != 0b00010000 {
+                                        audio.play_sound(8);
+                                    }
+                                    last_device5 = value;
+                                },
                                 0x6 => {}, //OUT 6  Watchdog not implemented.
                                 _ => panic!("Invalid OUT device number.")
                             }
