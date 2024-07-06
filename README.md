@@ -1,6 +1,6 @@
 # space-invaders-emulator
 
-This is an emulation of the Space Invaders arcade cabinet writen in Rust. The GUI and input bindings are powered by [egui](https://github.com/emilk/egui) and [eframe](https://docs.rs/eframe/latest/eframe/).
+This is an emulation of the [Intel 8080 microprocessor](https://en.wikipedia.org/wiki/Intel_8080) and the Space Invaders arcade cabinet written in Rust. The GUI and input bindings are powered by [egui](https://github.com/emilk/egui) and [eframe](https://docs.rs/eframe/latest/eframe/).
 
 ![](docs/screenshots/SpaceInvadersEmuColor.gif)
 
@@ -8,11 +8,15 @@ This is an emulation of the Space Invaders arcade cabinet writen in Rust. The GU
 
 Before launching the emulator you need to source the ROM files for Space Invaders, often found in four separate parts `invaders.e`, `invaders.f`, `invaders.g`, and `invaders.h`. After acquring these files either place then in the project root if running via `cargo` or place them next to the executable file.
 
+Additionally, if audio is desired, WAV files for the 9 sounds must be sourced, named 0.wav - 8.wav, and placed alongside the ROM. These files are easily found online.
+
 To launch the emulator with Cargo simply run it in the project root:
 
 ```
 cargo run
 ```
+
+**Note:** This emulator has only been tested on Windows.
 
 ## Key Bindings
 
