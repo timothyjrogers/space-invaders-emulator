@@ -50,12 +50,11 @@ impl App {
             }
             let memory = Box::new(intel8080::memory::Memory::new(rom));
             let mut c = intel8080::emulator::Cpu::new(memory);
-            println!("8080 CPU started");
 
             let mut shift_register: u16 = 0;
             let mut shift_register_offest: u8 = 0;
 
-            let mut audio = AudioHandler::new();
+            let mut audio_handler = AudioHandler::try_new();
             let mut last_device3: u8 = 0b00000000;
             let mut last_device5: u8 = 0b00000000;
             let mut start = Instant::now();
@@ -74,40 +73,50 @@ impl App {
                                     shift_register_offest = value & 0x07;
                                 },
                                 0x3 => {
-                                    if value & 0b00000001 == 0b00000001 && last_device3 & 0b00000001 != 0b00000001{
-                                        audio.play_sound(0);
+                                    match audio_handler {
+                                        Some(ref mut ah) => {
+                                            if value & 0b00000001 == 0b00000001 && last_device3 & 0b00000001 != 0b00000001{
+                                                ah.play_sound(0);
+                                            }
+                                            if value & 0b00000010 == 0b00000010 && last_device3 & 0b00000010 != 0b00000010 {
+                                                ah.play_sound(1);
+                                            }
+                                            if value & 0b00000100 == 0b00000100 && last_device3 & 0b00000100 != 0b00000100 {
+                                                ah.play_sound(2);
+                                            }
+                                            if value & 0b00001000 == 0b00001000 && last_device3 & 0b00001000 != 0b00001000 {
+                                                ah.play_sound(3);
+                                            }
+                                            last_device3 = value;
+                                        },
+                                        None => {}
                                     }
-                                    if value & 0b00000010 == 0b00000010 && last_device3 & 0b00000010 != 0b00000010 {
-                                        audio.play_sound(1);
-                                    }
-                                    if value & 0b00000100 == 0b00000100 && last_device3 & 0b00000100 != 0b00000100 {
-                                        audio.play_sound(2);
-                                    }
-                                    if value & 0b00001000 == 0b00001000 && last_device3 & 0b00001000 != 0b00001000 {
-                                        audio.play_sound(3);
-                                    }
-                                    last_device3 = value;
                                 },
                                 0x4 => {
                                     shift_register = ((value as u16) << 8) | (shift_register >> 8);
                                 },
                                 0x5 => {
-                                    if value & 0b00000001 == 0b00000001 && last_device5 & 0b00000001 != 0b00000001 {
-                                        audio.play_sound(4);
+                                    match audio_handler {
+                                        Some(ref mut ah) => {
+                                            if value & 0b00000001 == 0b00000001 && last_device5 & 0b00000001 != 0b00000001 {
+                                                ah.play_sound(4);
+                                            }
+                                            if value & 0b00000010 == 0b00000010 && last_device5 & 0b00000010 != 0b00000010 {
+                                                ah.play_sound(5);
+                                            }
+                                            if value & 0b00000100 == 0b00000100 && last_device5 & 0b00000100 != 0b00000100 {
+                                                ah.play_sound(6);
+                                            }
+                                            if value & 0b00001000 == 0b00001000 && last_device5 & 0b00001000 != 0b00001000 {
+                                                ah.play_sound(7);
+                                            }
+                                            if value & 0b00010000 == 0b00010000 && last_device5 & 0b00010000 != 0b00010000 {
+                                                ah.play_sound(8);
+                                            }
+                                            last_device5 = value;
+                                        },
+                                        None => {}
                                     }
-                                    if value & 0b00000010 == 0b00000010 && last_device5 & 0b00000010 != 0b00000010 {
-                                        audio.play_sound(5);
-                                    }
-                                    if value & 0b00000100 == 0b00000100 && last_device5 & 0b00000100 != 0b00000100 {
-                                        audio.play_sound(6);
-                                    }
-                                    if value & 0b00001000 == 0b00001000 && last_device5 & 0b00001000 != 0b00001000 {
-                                        audio.play_sound(7);
-                                    }
-                                    if value & 0b00010000 == 0b00010000 && last_device5 & 0b00010000 != 0b00010000 {
-                                        audio.play_sound(8);
-                                    }
-                                    last_device5 = value;
                                 },
                                 0x6 => {}, //OUT 6  Watchdog not implemented.
                                 _ => panic!("Invalid OUT device number.")
