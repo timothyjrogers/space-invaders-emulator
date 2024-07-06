@@ -10,6 +10,10 @@ const SCREEN_HEIGHT: usize = 224;
 const SCALE: usize = 2;
 const FRAME_BUFFER_SIZE: usize = SCREEN_WIDTH * SCREEN_HEIGHT;
 const ROM_SIZE: usize = 8_192;
+const WHITE: Color32 = Color32::WHITE;
+const BLACK: Color32 = Color32::BLACK;
+const GREEN: Color32 = Color32::GREEN;
+const RED: Color32 = Color32::RED;
 
 pub struct App {
     frame_buffer: Arc<Mutex<Box<Vec<Color32>>>>,
@@ -125,13 +129,21 @@ impl App {
                 for index in 0..7_168 {
                     for offset in 0..8 {
                         let val = vram[index] >> offset & 0x1;
+                        let adjusted_ypos = (index * 8 + offset) % 256;
                         if val == 1 {
+                            let mut color = WHITE;
+                            if adjusted_ypos < 80 {
+                                color = GREEN;
+                            }
+                            if adjusted_ypos > 200 && adjusted_ypos <= 220 {
+                                color = RED;
+                            }
                             for _ in 0..SCALE {
-                                current_row.push(Color32::WHITE);
+                                current_row.push(color);
                             }
                         } else {
                             for _ in 0..SCALE {
-                                current_row.push(Color32::BLACK);
+                                current_row.push(BLACK);
                             }
                         }
                     }
