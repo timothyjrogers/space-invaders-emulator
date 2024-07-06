@@ -179,21 +179,8 @@ impl App {
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                ui.menu_button("File", |ui| {
-                    if ui.button("Quit").clicked() {
-                        ctx.send_viewport_cmd(egui::ViewportCommand::Close);
-                    }
-                });
-                ui.add_space(16.0);
-
-            });
-        });
-
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.add_space(25.0);
+            ui.add_space(50.0);
             let image = ColorImage { size: [SCREEN_WIDTH * SCALE, SCREEN_HEIGHT * SCALE], pixels: *self.frame_buffer.lock().unwrap().clone(), };
             let texture = ctx.load_texture("display", image, TextureOptions::LINEAR);
             let rotated_image = egui::Image::from_texture(&texture).rotate(-1.5708, Vec2::splat(0.5));
