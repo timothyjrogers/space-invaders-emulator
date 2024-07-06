@@ -2,7 +2,7 @@
 
 This is an emulation of the Space Invaders arcade cabinet writen in Rust. The GUI and input bindings are powered by [egui](https://github.com/emilk/egui) and [eframe](https://docs.rs/eframe/latest/eframe/).
 
-![](docs/screenshots/SpaceInvadersEmu.gif)
+![](docs/screenshots/SpaceInvadersEmuColor.gif)
 
 ## Running the Emulator
 
